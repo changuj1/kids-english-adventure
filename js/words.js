@@ -70,11 +70,11 @@ const vocabulary = [
     { id: 53, word: "Ambulance", meaning: "救護車", category: "Vehicles", image: "assets/images/ambulance.png" },
     { id: 54, word: "Fire Truck", meaning: "消防車", category: "Vehicles", image: "assets/images/fire-truck.png" },
     { id: 55, word: "Police Car", meaning: "警車", category: "Vehicles", image: "assets/images/police-car.png" },
-    { id: 56, word: "Subway", meaning: "地鐵", category: "Vehicles", image: "assets/images/subway.png" },
-    { id: 57, word: "Scooter", meaning: "滑板車", category: "Vehicles", image: "assets/images/scooter.png" },
-    { id: 58, word: "Van", meaning: "廂型車", category: "Vehicles", image: "assets/images/van.png" },
-    { id: 59, word: "Sailboat", meaning: "帆船", category: "Vehicles", image: "assets/images/sailboat.png" },
-    { id: 60, word: "Tractor", meaning: "曳引機", category: "Vehicles", image: "assets/images/tractor.png" },
+    //{ id: 56, word: "Subway", meaning: "地鐵", category: "Vehicles", image: "assets/images/subway.png" },
+    //{ id: 57, word: "Scooter", meaning: "滑板車", category: "Vehicles", image: "assets/images/scooter.png" },
+    //{ id: 58, word: "Van", meaning: "廂型車", category: "Vehicles", image: "assets/images/van.png" },
+    //{ id: 59, word: "Sailboat", meaning: "帆船", category: "Vehicles", image: "assets/images/sailboat.png" },
+    //{ id: 60, word: "Tractor", meaning: "曳引機", category: "Vehicles", image: "assets/images/tractor.png" },
 
     // ===== Objects 生活用品 =====
 
