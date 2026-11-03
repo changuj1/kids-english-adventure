@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kids English Adventure - 兒童英文冒險學習遊戲">
+    <meta name="theme-color" content="#80d8ff">
+
+    <title>Kids English Adventure</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- 頂部資訊 -->
+    <header class="top-bar">
+        <div class="logo">
+            🌈 Kids English
+        </div>
+
+        <div class="star-box">
+            ⭐ <span id="starCount">0</span>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <!-- 歡迎區 -->
+        <section class="welcome-section">
+            <div class="welcome-text">
+                <h1>Welcome to<br>Adventure Island! 🏝️</h1>
+                <p>一起探索英文世界，成為單字小達人！</p>
+                <p class="english-subtitle">
+                    Let's Explore and Learn!
+                </p>
+            </div>
+
+            <div class="island-illustration">
+                🏝️
+            </div>
+        </section>
+
+        <!-- 遊戲模式 -->
+        <section class="game-section">
+
+            <h2>🎮 Choose Your Adventure</h2>
+
+            <div class="game-grid">
+
+                <button class="game-card picture" data-mode="picture">
+                    <span class="game-icon">🖼️</span>
+                    <span class="game-title">圖片猜單字</span>
+                    <span class="game-desc">Look and Choose!</span>
+                </button>
+
+                <button class="game-card listening" data-mode="listening">
+                    <span class="game-icon">👂</span>
+                    <span class="game-title">聽英文選圖片</span>
+                    <span class="game-desc">Listen and Find!</span>
+                </button>
+
+                <button class="game-card spelling" data-mode="spelling">
+                    <span class="game-icon">✏️</span>
+                    <span class="game-title">英文拼字</span>
+                    <span class="game-desc">Spell the Word!</span>
+                </button>
+
+                <button class="game-card review" data-mode="review">
+                    <span class="game-icon">📚</span>
+                    <span class="game-title">錯題複習</span>
+                    <span class="game-desc">Practice Again!</span>
+                </button>
+
+                <button class="game-card vocabulary" data-mode="vocabulary">
+                    <span class="game-icon">🔊</span>
+                    <span class="game-title">單字圖鑑</span>
+                    <span class="game-desc">Explore Words!</span>
+                </button>
+
+            </div>
+        </section>
+
+        <!-- 學習進度 -->
+        <section class="progress-section">
+            <h2>🏆 My Learning Journey</h2>
+
+            <div class="progress-info">
+                <span>今日學習進度</span>
+                <span id="progressText">0 / 10</span>
+            </div>
+
+            <div class="progress-bar">
+                <div id="progressFill"></div>
+            </div>
+
+            <p class="progress-message">
+                每天學習一點點，英文越來越棒！ 🌟
+            </p>
+        </section>
+
+        <!-- 遊戲內容區 -->
+        <section id="gamePanel" class="game-panel hidden">
+            <button id="backBtn" class="back-button">
+                ← 返回首頁
+            </button>
+
+            <h2 id="panelTitle"></h2>
+            <p id="panelDescription"></p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Made with ❤️ for Little English Learners</p>
+    </footer>
+
+    <script src="js/words.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
