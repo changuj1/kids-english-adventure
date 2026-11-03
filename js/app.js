@@ -519,9 +519,18 @@ function showSpellingQuestion() {
 
         <h2 class="quiz-question">✏️ Spell the word!</h2>
 
-        <div class="spelling-question">
-            <div class="spelling-emoji">📝</div>
-            <h2>${word.meaning}</h2>
+        <div class="spelling-question">`
+            //<div class="spelling-emoji">📝</div>
+            +
+            `<div class="quiz-image-box">
+                <img
+                    id="quizImage"
+                    src="${word.image}"
+                    alt="Guess the English word"
+                >
+            </div>`            
+            +
+            `<h2>${word.meaning}</h2>
             <p>請利用下方字母拼出正確的英文單字</p>
         </div>
 
@@ -1094,9 +1103,18 @@ function showReviewQuestion() {
             </div>
         </div>
 
-        <div class="review-question">
-            <div class="review-icon">📖</div>
-            <h2>記得這個單字嗎？</h2>
+        <div class="review-question">`
+            //<div class="review-icon">📖</div>
+            +
+            `<div class="quiz-image-box">
+                <img
+                    id="quizImage"
+                    src="${word.image}"
+                    alt="Guess the English word"
+                >
+            </div>`            
+            +            
+            `<h2>記得這個單字嗎？</h2>
             <p>中文意思：</p>
             <h2 class="review-meaning">${word.meaning}</h2>
         </div>
