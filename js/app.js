@@ -299,6 +299,8 @@ function checkAnswer(selectedId, correctWord) {
     });
 
     if (isCorrect) {
+        playCorrectSound();
+
         score++;
         totalStars++;
 
@@ -324,6 +326,8 @@ function checkAnswer(selectedId, correctWord) {
             </div>
         `;
     } else {
+        playWrongSound();
+
         // 將答錯的單字加入複習清單
         if (!wrongWordIds.includes(correctWord.id)) {
             wrongWordIds.push(correctWord.id);
@@ -381,7 +385,7 @@ function speakEnglish(word) {
     const speech = new SpeechSynthesisUtterance(word);
 
     speech.lang = "en-US";
-    speech.rate = 0.6;
+    speech.rate = 0.55;
     speech.pitch = 1;
 
     window.speechSynthesis.speak(speech);
@@ -392,6 +396,8 @@ function speakEnglish(word) {
 // ==========================================
 
 function showFinalResult() {
+    playLevelCompleteSound();
+
     const quizArea = document.getElementById("quizArea");
 
     const total = currentQuestions.length;
@@ -687,6 +693,8 @@ function checkSpellingAnswer(word) {
     answered = true;
 
     if (userAnswer === correctAnswer) {
+        playCorrectSound();
+
         score++;
         totalStars++;
 
@@ -711,6 +719,8 @@ function checkSpellingAnswer(word) {
             </div>
         `;
     } else {
+        playWrongSound();
+
         if (!wrongWordIds.includes(word.id)) {
             wrongWordIds.push(word.id);
         }
@@ -743,6 +753,8 @@ function checkSpellingAnswer(word) {
 
 // 拼字遊戲結算
 function showSpellingFinalResult() {
+    playLevelCompleteSound();
+
     const quizArea = document.getElementById("quizArea");
 
     const total = currentQuestions.length;
@@ -947,6 +959,8 @@ function checkListeningAnswer(selectedId, correctWord) {
     });
 
     if (isCorrect) {
+        playCorrectSound();
+
         score++;
         totalStars++;
 
@@ -974,6 +988,8 @@ function checkListeningAnswer(selectedId, correctWord) {
             </div>
         `;
     } else {
+        playWrongSound();
+
         // 答錯後加入錯題清單
         if (!wrongWordIds.includes(correctWord.id)) {
             wrongWordIds.push(correctWord.id);
@@ -1005,6 +1021,8 @@ function checkListeningAnswer(selectedId, correctWord) {
 
 // 聽力遊戲結算
 function showListeningFinalResult() {
+    playLevelCompleteSound();
+
     const quizArea = document.getElementById("quizArea");
 
     const total = currentQuestions.length;
@@ -1200,6 +1218,8 @@ function checkReviewAnswer(selectedId, correctWord) {
     });
 
     if (isCorrect) {
+        playCorrectSound();
+
         score++;
         totalStars++;
 
@@ -1228,6 +1248,8 @@ function checkReviewAnswer(selectedId, correctWord) {
             </div>
         `;
     } else {
+        playWrongSound();
+
         // 答錯就保留在錯題清單
         if (!wrongWordIds.includes(correctWord.id)) {
             wrongWordIds.push(correctWord.id);
@@ -1283,6 +1305,8 @@ function showEmptyReviewResult() {
 
 // 複習完成結算
 function showReviewFinalResult() {
+    playLevelCompleteSound();
+
     const quizArea = document.getElementById("quizArea");
 
     const total = currentQuestions.length;
@@ -1384,6 +1408,36 @@ function startVocabularyLibrary() {
                     🍔 食物
                 </button>
 
+                <button class="category-button"
+                    data-category="Colors">
+                    🎨 顏色
+                </button>
+
+                <button class="category-button"
+                    data-category="Numbers">
+                    🔢 數字
+                </button>
+
+                <button class="category-button"
+                    data-category="Body Parts">
+                    👄 身體部位
+                </button>
+
+                <button class="category-button"
+                    data-category="Family">
+                    👨‍👩‍👧‍👦 家庭
+                </button>
+
+                <button class="category-button"
+                    data-category="School">
+                    🏫 學校
+                </button>
+
+                <button class="category-button"
+                    data-category="Nature">
+                    🌳 自然
+                </button>
+
             </div>
 
             <div id="vocabularyCount"
@@ -1470,6 +1524,111 @@ function renderVocabularyWords() {
         </div>
     `).join("");
 }
+
+
+// ========================================
+// 🎵 Kids English Adventure 音效系統
+// ========================================
+
+// 建立音效播放環境
+let gameAudioContext = null;
+
+// 取得 AudioContext
+function getGameAudioContext() {
+    if (!gameAudioContext) {
+        const AudioContextClass =
+            window.AudioContext || window.webkitAudioContext;
+
+        if (!AudioContextClass) {
+            console.warn("目前瀏覽器不支援 Web Audio API");
+            return null;
+        }
+
+        gameAudioContext = new AudioContextClass();
+    }
+
+    // 如果音效環境暫停，就重新啟動
+    if (gameAudioContext.state === "suspended") {
+        gameAudioContext.resume();
+    }
+
+    return gameAudioContext;
+}
+
+
+// 播放單一音符
+function playGameTone(frequency, delay, duration, volume = 0.15, type = "sine") {
+    const audio = getGameAudioContext();
+
+    if (!audio) return;
+
+    const oscillator = audio.createOscillator();
+    const gainNode = audio.createGain();
+
+    const startTime = audio.currentTime + delay;
+    const endTime = startTime + duration;
+
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, startTime);
+
+    gainNode.gain.setValueAtTime(0.001, startTime);
+    gainNode.gain.linearRampToValueAtTime(
+        volume,
+        startTime + 0.02
+    );
+    gainNode.gain.exponentialRampToValueAtTime(
+        0.001,
+        endTime
+    );
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audio.destination);
+
+    oscillator.start(startTime);
+    oscillator.stop(endTime + 0.02);
+}
+
+
+// ========================================
+// 🔔 答對音效：叮咚叮咚
+// ========================================
+
+function playCorrectSound() {
+    // 清脆、明亮的雙音組合
+    playGameTone(880, 0, 0.18, 0.5, "sine");
+    playGameTone(1175, 0.18, 0.25, 0.5, "sine");
+
+    playGameTone(988, 0.45, 0.18, 0.5, "sine");
+    playGameTone(1318, 0.63, 0.30, 0.5, "sine");
+}
+
+
+// ========================================
+// 💨 答錯音效：噗噗
+// ========================================
+
+function playWrongSound() {
+    // 低音、柔和的兩聲噗噗
+    playGameTone(190, 0, 0.16, 0.5, "triangle");
+    playGameTone(135, 0.20, 0.20, 0.5, "triangle");
+}
+
+
+// ========================================
+// 🏆 完成關卡音效：勝利旋律
+// ========================================
+
+function playLevelCompleteSound() {
+    // 音符逐漸升高，營造完成任務的感覺
+    playGameTone(523, 0, 0.20, 0.5, "sine");
+    playGameTone(659, 0.20, 0.20, 0.5, "sine");
+    playGameTone(784, 0.40, 0.20, 0.5, "sine");
+    playGameTone(1047, 0.60, 0.35, 0.5, "sine");
+
+    // 最後加上閃亮的高音
+    playGameTone(1318, 0.85, 0.55, 0.5, "sine");
+}
+
 
 // ==========================================
 // 載入完成

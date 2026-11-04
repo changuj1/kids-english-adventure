@@ -120,7 +120,133 @@ const vocabulary = [
     { id: 97, word: "Hot Dog", meaning: "熱狗", category: "Food", image: "assets/images/hot-dog.png" },
     { id: 98, word: "French Fries", meaning: "薯條", category: "Food", image: "assets/images/french-fries.png" },
     { id: 99, word: "Pancake", meaning: "鬆餅", category: "Food", image: "assets/images/pancake.png" },
-    { id: 100, word: "Popcorn", meaning: "爆米花", category: "Food", image: "assets/images/popcorn.png" }
+    { id: 100, word: "Popcorn", meaning: "爆米花", category: "Food", image: "assets/images/popcorn.png" },
+
+    // ===== Colors 顏色 =====
+
+    { id: 101, word: "Red", meaning: "紅色", category: "Colors", image: "assets/images/red.png" },
+    { id: 102, word: "Blue", meaning: "藍色", category: "Colors", image: "assets/images/blue.png" },
+    { id: 103, word: "Yellow", meaning: "黃色", category: "Colors", image: "assets/images/yellow.png" },
+    { id: 104, word: "Green", meaning: "綠色", category: "Colors", image: "assets/images/green.png" },
+    { id: 105, word: "Orange", meaning: "橘色", category: "Colors", image: "assets/images/orange-color.png" },
+    { id: 106, word: "Purple", meaning: "紫色", category: "Colors", image: "assets/images/purple.png" },
+    { id: 107, word: "Pink", meaning: "粉紅色", category: "Colors", image: "assets/images/pink.png" },
+    { id: 108, word: "Black", meaning: "黑色", category: "Colors", image: "assets/images/black.png" },
+    { id: 109, word: "White", meaning: "白色", category: "Colors", image: "assets/images/white.png" },
+    { id: 110, word: "Brown", meaning: "棕色", category: "Colors", image: "assets/images/brown.png" },
+    { id: 111, word: "Gray", meaning: "灰色", category: "Colors", image: "assets/images/gray.png" },
+    { id: 112, word: "Gold", meaning: "金色", category: "Colors", image: "assets/images/gold.png" },
+    { id: 113, word: "Silver", meaning: "銀色", category: "Colors", image: "assets/images/silver.png" },
+    { id: 114, word: "Beige", meaning: "米色", category: "Colors", image: "assets/images/beige.png" },
+    //{ id: 115, word: "Rainbow", meaning: "彩虹色", category: "Colors", image: "assets/images/rainbow.png" },
+
+
+    // ===== Numbers 數字 =====
+
+    { id: 116, word: "Zero", meaning: "零", category: "Numbers", image: "assets/images/zero.png" },
+    { id: 117, word: "One", meaning: "一", category: "Numbers", image: "assets/images/one.png" },
+    { id: 118, word: "Two", meaning: "二", category: "Numbers", image: "assets/images/two.png" },
+    { id: 119, word: "Three", meaning: "三", category: "Numbers", image: "assets/images/three.png" },
+    { id: 120, word: "Four", meaning: "四", category: "Numbers", image: "assets/images/four.png" },
+    { id: 121, word: "Five", meaning: "五", category: "Numbers", image: "assets/images/five.png" },
+    { id: 122, word: "Six", meaning: "六", category: "Numbers", image: "assets/images/six.png" },
+    { id: 123, word: "Seven", meaning: "七", category: "Numbers", image: "assets/images/seven.png" },
+    { id: 124, word: "Eight", meaning: "八", category: "Numbers", image: "assets/images/eight.png" },
+    { id: 125, word: "Nine", meaning: "九", category: "Numbers", image: "assets/images/nine.png" },
+    { id: 126, word: "Ten", meaning: "十", category: "Numbers", image: "assets/images/ten.png" },
+    { id: 127, word: "Hundred", meaning: "百", category: "Numbers", image: "assets/images/hundred.png" },
+    { id: 128, word: "Thousand", meaning: "千", category: "Numbers", image: "assets/images/thousand.png" },
+
+
+    // ===== Body Parts 身體部位 =====
+
+    { id: 129, word: "Head", meaning: "頭", category: "Body Parts", image: "assets/images/head.png" },
+    { id: 130, word: "Hair", meaning: "頭髮", category: "Body Parts", image: "assets/images/hair.png" },
+    { id: 131, word: "Eye", meaning: "眼睛", category: "Body Parts", image: "assets/images/eye.png" },
+    { id: 132, word: "Ear", meaning: "耳朵", category: "Body Parts", image: "assets/images/ear.png" },
+    { id: 133, word: "Nose", meaning: "鼻子", category: "Body Parts", image: "assets/images/nose.png" },
+    { id: 134, word: "Mouth", meaning: "嘴巴", category: "Body Parts", image: "assets/images/mouth.png" },
+    { id: 135, word: "Tooth", meaning: "牙齒", category: "Body Parts", image: "assets/images/tooth.png" },
+    { id: 136, word: "Neck", meaning: "脖子", category: "Body Parts", image: "assets/images/neck.png" },
+    { id: 137, word: "Shoulder", meaning: "肩膀", category: "Body Parts", image: "assets/images/shoulder.png" },
+    { id: 138, word: "Arm", meaning: "手臂", category: "Body Parts", image: "assets/images/arm.png" },
+    { id: 139, word: "Hand", meaning: "手", category: "Body Parts", image: "assets/images/hand.png" },
+    { id: 140, word: "Finger", meaning: "手指", category: "Body Parts", image: "assets/images/finger.png" },
+    { id: 141, word: "Chest", meaning: "胸部", category: "Body Parts", image: "assets/images/chest.png" },
+    //{ id: 142, word: "Back", meaning: "背部", category: "Body Parts", image: "assets/images/back.png" },
+    { id: 143, word: "Stomach", meaning: "肚子", category: "Body Parts", image: "assets/images/stomach.png" },
+    { id: 144, word: "Leg", meaning: "腿", category: "Body Parts", image: "assets/images/leg.png" },
+    { id: 145, word: "Knee", meaning: "膝蓋", category: "Body Parts", image: "assets/images/knee.png" },
+    { id: 146, word: "Foot", meaning: "腳", category: "Body Parts", image: "assets/images/foot.png" },
+    { id: 147, word: "Toe", meaning: "腳趾", category: "Body Parts", image: "assets/images/toe.png" },
+    { id: 148, word: "Heart", meaning: "心臟", category: "Body Parts", image: "assets/images/heart.png" },
+
+
+    // ===== Family 家庭 =====
+
+    { id: 149, word: "Father", meaning: "爸爸", category: "Family", image: "assets/images/father.png" },
+    { id: 150, word: "Mother", meaning: "媽媽", category: "Family", image: "assets/images/mother.png" },
+    { id: 151, word: "Parents", meaning: "父母", category: "Family", image: "assets/images/parents.png" },
+    { id: 152, word: "Brother", meaning: "兄弟", category: "Family", image: "assets/images/brother.png" },
+    { id: 153, word: "Sister", meaning: "姊妹", category: "Family", image: "assets/images/sister.png" },
+    { id: 154, word: "Baby", meaning: "嬰兒", category: "Family", image: "assets/images/baby.png" },
+    { id: 155, word: "Grandfather", meaning: "爺爺／外公", category: "Family", image: "assets/images/grandfather.png" },
+    { id: 156, word: "Grandmother", meaning: "奶奶／外婆", category: "Family", image: "assets/images/grandmother.png" },
+    { id: 157, word: "Grandparents", meaning: "祖父母／外祖父母", category: "Family", image: "assets/images/grandparents.png" },
+    { id: 158, word: "Uncle", meaning: "叔叔／舅舅", category: "Family", image: "assets/images/uncle.png" },
+    { id: 159, word: "Aunt", meaning: "阿姨／姑姑", category: "Family", image: "assets/images/aunt.png" },
+    { id: 160, word: "Cousin", meaning: "堂／表兄弟姊妹", category: "Family", image: "assets/images/cousin.png" },
+    { id: 161, word: "Son", meaning: "兒子", category: "Family", image: "assets/images/son.png" },
+    { id: 162, word: "Daughter", meaning: "女兒", category: "Family", image: "assets/images/daughter.png" },
+    { id: 163, word: "Family", meaning: "家庭", category: "Family", image: "assets/images/family.png" },
+
+
+    // ===== School 學校 =====
+
+    { id: 164, word: "School", meaning: "學校", category: "School", image: "assets/images/school.png" },
+    { id: 165, word: "Teacher", meaning: "老師", category: "School", image: "assets/images/teacher.png" },
+    { id: 166, word: "Student", meaning: "學生", category: "School", image: "assets/images/student.png" },
+    { id: 167, word: "Classroom", meaning: "教室", category: "School", image: "assets/images/classroom.png" },
+    { id: 168, word: "Desk", meaning: "書桌", category: "School", image: "assets/images/desk.png" },
+    //{ id: 169, word: "Chair", meaning: "椅子", category: "School", image: "assets/images/chair.png" },
+    //{ id: 170, word: "Book", meaning: "書", category: "School", image: "assets/images/book.png" },
+    { id: 171, word: "Notebook", meaning: "筆記本", category: "School", image: "assets/images/notebook.png" },
+    //{ id: 172, word: "Pencil", meaning: "鉛筆", category: "School", image: "assets/images/pencil.png" },
+    //{ id: 173, word: "Pen", meaning: "原子筆", category: "School", image: "assets/images/pen.png" },
+    { id: 174, word: "Eraser", meaning: "橡皮擦", category: "School", image: "assets/images/eraser.png" },
+    { id: 175, word: "Ruler", meaning: "尺", category: "School", image: "assets/images/ruler.png" },
+    //{ id: 176, word: "Backpack", meaning: "背包", category: "School", image: "assets/images/backpack.png" },
+    //{ id: 177, word: "Crayon", meaning: "蠟筆", category: "School", image: "assets/images/crayon.png" },
+    { id: 178, word: "Scissors", meaning: "剪刀", category: "School", image: "assets/images/scissors.png" },
+    { id: 179, word: "Glue", meaning: "膠水", category: "School", image: "assets/images/glue.png" },
+    { id: 180, word: "Blackboard", meaning: "黑板", category: "School", image: "assets/images/blackboard.png" },
+    //{ id: 181, word: "Computer", meaning: "電腦", category: "School", image: "assets/images/computer.png" },
+    //{ id: 182, word: "School Bus", meaning: "校車", category: "School", image: "assets/images/school-bus.png" },
+    { id: 183, word: "Lunchbox", meaning: "便當盒", category: "School", image: "assets/images/lunchbox.png" },
+
+
+    // ===== Nature 自然 =====
+
+    { id: 184, word: "Sun", meaning: "太陽", category: "Nature", image: "assets/images/sun.png" },
+    { id: 185, word: "Moon", meaning: "月亮", category: "Nature", image: "assets/images/moon.png" },
+    { id: 186, word: "Star", meaning: "星星", category: "Nature", image: "assets/images/star.png" },
+    { id: 187, word: "Sky", meaning: "天空", category: "Nature", image: "assets/images/sky.png" },
+    { id: 188, word: "Cloud", meaning: "雲", category: "Nature", image: "assets/images/cloud.png" },
+    { id: 189, word: "Rain", meaning: "雨", category: "Nature", image: "assets/images/rain.png" },
+    { id: 190, word: "Snow", meaning: "雪", category: "Nature", image: "assets/images/snow.png" },
+    { id: 191, word: "Wind", meaning: "風", category: "Nature", image: "assets/images/wind.png" },
+    { id: 192, word: "Rainbow", meaning: "彩虹", category: "Nature", image: "assets/images/rainbow.png" },
+    { id: 193, word: "Tree", meaning: "樹", category: "Nature", image: "assets/images/tree.png" },
+    { id: 194, word: "Flower", meaning: "花", category: "Nature", image: "assets/images/flower.png" },
+    { id: 195, word: "Grass", meaning: "草", category: "Nature", image: "assets/images/grass.png" },
+    { id: 196, word: "Mountain", meaning: "山", category: "Nature", image: "assets/images/mountain.png" },
+    { id: 197, word: "River", meaning: "河流", category: "Nature", image: "assets/images/river.png" },
+    { id: 198, word: "Ocean", meaning: "海洋", category: "Nature", image: "assets/images/ocean.png" },
+    { id: 199, word: "Beach", meaning: "海灘", category: "Nature", image: "assets/images/beach.png" },
+    { id: 200, word: "Rock", meaning: "岩石", category: "Nature", image: "assets/images/rock.png" },
+    { id: 201, word: "Leaf", meaning: "葉子", category: "Nature", image: "assets/images/leaf.png" },
+    { id: 202, word: "Forest", meaning: "森林", category: "Nature", image: "assets/images/forest.png" },
+    { id: 203, word: "Fire", meaning: "火", category: "Nature", image: "assets/images/fire.png" }
 
 ];
 
