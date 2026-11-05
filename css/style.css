@@ -156,28 +156,38 @@ button {
 }
 
 .picture {
-    background: #fff0d9;
-    border-color: #ffdb9e;
+    background: #ffe7e7;
+    border-color: #ffc7c7;
 }
 
 .listening {
-    background: #e1f6e9;
-    border-color: #b7e9c9;
+    background: #fff9f2;
+    border-color: #ffdbbb;
 }
 
 .spelling {
-    background: #f0e9ff;
-    border-color: #d6c4ff;
+    background: #ffffe4;
+    border-color: #fff0a3;
 }
 
 .review {
-    background: #ffe8ed;
-    border-color: #ffc8d4;
+    background: #e0e0e0;
+    border-color: #bebdbd;
 }
 
 .vocabulary {
-    background: #e2f3ff;
-    border-color: #b9e2ff;
+    background: #ecfce6;
+    border-color: #b9ffb9;
+}
+
+.sentence {
+    background: #e8efff;
+    border-color: #c5dbff;
+}
+
+.grammar {
+    background: #f7ecff;
+    border-color: #e7d3ff;
 }
 
 /* ===== 學習進度 ===== */
@@ -561,6 +571,7 @@ footer {
     .speak-button {
         font-size: 15px;
     }
+
 }
 
 
@@ -911,6 +922,24 @@ footer {
     margin-top: 10px;
 }
 
+.review-category-button {
+    min-height: 65px;
+    padding: 12px;
+    border: 3px solid #b9d8ff;
+    border-radius: 16px;
+    background: white;
+    color: #333;
+    font-size: 21px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.review-category-button:hover {
+    background: #eaf4ff;
+    transform: translateY(-3px);
+}
+
 @media (max-width: 600px) {
     .review-question {
         padding: 20px 10px;
@@ -1069,4 +1098,150 @@ footer {
         padding: 9px 13px;
         font-size: 14px;
     }
+}
+
+/* ========================================
+   英文問答練習
+======================================== */
+
+.sentence-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.sentence-option-button {
+    min-height: 65px;
+    padding: 12px;
+    border: 3px solid #b9d8ff;
+    border-radius: 16px;
+    background: white;
+    color: #333;
+    font-size: 21px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.sentence-option-button:hover:not(:disabled) {
+    background: #eaf4ff;
+    transform: translateY(-3px);
+}
+
+.sentence-option-button:disabled {
+    cursor: default;
+    opacity: 1;
+}
+
+.sentence-option-button.correct {
+    background: #c6f6d5;
+    border-color: #38a169;
+    color: #276749;
+}
+
+.sentence-option-button.incorrect {
+    background: #fed7d7;
+    border-color: #e53e3e;
+    color: #9b2c2c;
+}
+
+.speech-button {
+    border: none;
+    border-radius: 30px;
+    background: #63b3ed;
+    color: white;
+    padding: 12px 25px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 25px;
+    transition: 0.2s;
+}
+
+.speech-button:hover {
+    background: #3182ce;
+    transform: scale(1.04);
+}
+
+/* 手機版 */
+@media (max-width: 600px) {
+
+    .sentence-options {
+        gap: 10px;
+    }
+
+    .sentence-option-button {
+        min-height: 58px;
+        font-size: 18px;
+        padding: 8px;
+    }
+
+    .speech-button {
+        font-size: 15px;
+    }
+
+}
+
+/* ========================================
+   英文文法挑戰
+======================================== */
+
+.grammar-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.grammar-option-button {
+    min-height: 65px;
+    padding: 12px;
+    border: 3px solid #b9d8ff;
+    border-radius: 16px;
+    background: white;
+    color: #333;
+    font-size: 21px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.grammar-option-button:hover:not(:disabled) {
+    background: #eaf4ff;
+    transform: translateY(-3px);
+}
+
+.grammar-option-button:disabled {
+    cursor: default;
+    opacity: 1;
+}
+
+.grammar-option-button.correct {
+    background: #c6f6d5;
+    border-color: #38a169;
+    color: #276749;
+}
+
+.grammar-option-button.incorrect {
+    background: #fed7d7;
+    border-color: #e53e3e;
+    color: #9b2c2c;
+}
+
+/* 手機版 */
+@media (max-width: 600px) {
+
+    .grammar-options {
+        gap: 10px;
+    }
+
+    .grammar-option-button {
+        min-height: 58px;
+        font-size: 18px;
+        padding: 8px;
+    }
+
 }

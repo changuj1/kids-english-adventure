@@ -24,6 +24,14 @@ const gameModes = {
     vocabulary: {
         title: "📖 單字圖鑑",
         description: "探索所有英文單字，認識更多新朋友！"
+    },
+    sentence: {
+        title: "💬 英文問答練習",
+        description: "練習生活中常用的英文問答，聽懂問題並選出正確回答！"
+    },
+    grammar: {
+        title: "📝 英文文法挑戰",
+        description: "挑戰 50 道英文文法題目，學會正確的英文句型！"
     }
 };
 
@@ -45,6 +53,57 @@ let totalStars = Number(localStorage.getItem("kidsAdventureStars")) || 0;
 let wrongWordIds = JSON.parse(
     localStorage.getItem("kidsAdventureWrongWords") || "[]"
 );
+
+// ==========================================
+// 英文問答與文法錯題紀錄
+// ==========================================
+
+// 英文問答錯題
+let wrongSentenceIds = JSON.parse(
+    localStorage.getItem("kidsAdventureWrongSentences") || "[]"
+);
+
+// 英文文法錯題
+let wrongGrammarIds = JSON.parse(
+    localStorage.getItem("kidsAdventureWrongGrammar") || "[]"
+);
+
+// ==========================================
+// 英文問答遊戲狀態
+// ==========================================
+
+let currentSentenceQuestions = [];
+let currentSentenceQuestionIndex = 0;
+let sentenceScore = 0;
+let sentenceAnswered = false;
+
+// 是否正在進行英文問答錯題複習
+let sentenceReviewMode = false;
+
+// ==========================================
+// 英文文法遊戲狀態
+// ==========================================
+
+let currentGrammarQuestions = [];
+let currentGrammarQuestionIndex = 0;
+let grammarScore = 0;
+let grammarAnswered = false;
+
+let grammarReviewMode = false;
+
+// 全部錯題複習狀態
+let allReviewMode = false;
+let allReviewStage = "";
+let allReviewResults = {
+    word: 0,
+    sentence: 0,
+    grammar: 0
+};
+let allReviewTotals = {
+    word: 0,
+    sentence: 0,
+    grammar: 0
+};
 
 // ==========================================
 // 網頁元素
@@ -95,6 +154,10 @@ gameCards.forEach(card => {
             startReviewGame();
         } else if (mode === "vocabulary") {
             startVocabularyLibrary();
+        } else if (mode === "sentence") {
+            startSentenceGame();
+        } else if (mode === "grammar") {
+            startGrammarGame();
         } else {
             clearQuizArea();
         }
@@ -1068,11 +1131,141 @@ function showListeningFinalResult() {
 
 
 // ==========================================
-// 錯題複習 Review Mode
+// 開始錯題複習中心
 // ==========================================
 
-// 開始錯題複習
 function startReviewGame() {
+
+    clearQuizArea();
+
+    const quizArea = document.createElement("div");
+
+    quizArea.id = "quizArea";
+    quizArea.className = "quiz-area";
+
+    gamePanel.appendChild(quizArea);
+
+    // 取得三種錯題數量
+    const wordCount = wrongWordIds.length;
+    const sentenceCount = wrongSentenceIds.length;
+    const grammarCount = wrongGrammarIds.length;
+
+    const totalCount =
+        wordCount + sentenceCount + grammarCount;
+
+    quizArea.innerHTML = `
+
+        <div class="review-center">
+
+            <h2>📚 錯題複習中心</h2>
+
+            <p>
+                選擇想重新挑戰的學習內容
+            </p>
+
+            <div class="review-category-grid">
+
+                <button
+                    class="review-category-button"
+                    data-review-type="word">
+
+                    🖼️ 單字錯題
+
+                    <span>${wordCount} 題</span>
+
+                </button>
+
+                <button
+                    class="review-category-button"
+                    data-review-type="sentence">
+
+                    💬 英文問答錯題
+
+                    <span>${sentenceCount} 題</span>
+
+                </button>
+
+                <button
+                    class="review-category-button"
+                    data-review-type="grammar">
+
+                    📝 英文文法錯題
+
+                    <span>${grammarCount} 題</span>
+
+                </button>
+
+                <button
+                    class="review-category-button"
+                    data-review-type="all">
+
+                    🌟 全部錯題
+
+                    <span>${totalCount} 題</span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+    // 複習分類按鈕事件
+    const reviewButtons = quizArea.querySelectorAll(
+        ".review-category-button"
+    );
+
+    reviewButtons.forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const type = button.dataset.reviewType;
+
+            startSelectedReview(type);
+
+        });
+
+    });
+
+}
+
+// ==========================================
+// 啟動指定類型的錯題複習
+// ==========================================
+
+function startSelectedReview(type) {
+
+    if (type === "word") {
+
+        // 複習單字錯題
+        startWordReview();
+
+    } else if (type === "sentence") {
+
+        // 複習英文問答錯題
+        startSentenceReview();
+
+    } else if (type === "grammar") {
+
+        // 複習英文文法錯題
+        startGrammarReview();
+
+    } else if (type === "all") {
+
+        // 複習全部錯題
+        startAllReview();
+
+    }
+
+}
+
+// ==========================================
+// 開始單字錯題複習
+// ==========================================
+
+function startWordReview() {
+
     clearQuizArea();
 
     // 依照錯題 ID 找出對應單字
@@ -1086,6 +1279,7 @@ function startReviewGame() {
     score = 0;
 
     const quizArea = document.createElement("div");
+
     quizArea.id = "quizArea";
     quizArea.className = "quiz-area";
 
@@ -1093,11 +1287,15 @@ function startReviewGame() {
 
     // 沒有錯題時顯示完成畫面
     if (currentQuestions.length === 0) {
+
         showEmptyReviewResult();
+
         return;
+
     }
 
     showReviewQuestion();
+
 }
 
 // 顯示錯題複習題目
@@ -1117,7 +1315,7 @@ function showReviewQuestion() {
 
         <div class="quiz-progress">
             <div class="quiz-progress-fill"
-                 style="width: ${(currentQuestionIndex / currentQuestions.length) * 100}%">
+                 style="width: ${(currentQuestionIndex + 1 / currentQuestions.length) * 100}%">
             </div>
         </div>
 
@@ -1185,7 +1383,12 @@ function showReviewQuestion() {
             if (currentQuestionIndex < currentQuestions.length) {
                 showReviewQuestion();
             } else {
-                showReviewFinalResult();
+                if (allReviewMode) {
+                    allReviewResults.word = score;
+                    startNextAllReview();
+                } else {
+                    showReviewFinalResult();
+                }
             }
         });
 }
@@ -1346,6 +1549,54 @@ function showReviewFinalResult() {
         .addEventListener("click", () => {
             startReviewGame();
         });
+}
+
+// ==========================================
+// 開始英文問答錯題複習
+// ==========================================
+
+function startSentenceReview() {
+
+    clearQuizArea();
+
+    // 依照錯題 ID 找出對應問答
+    const reviewQuestions = wrongSentenceIds
+        .map(id =>
+            sentenceQuestions.find(item => item.id === id)
+        )
+        .filter(item => item !== undefined);
+
+    // 隨機排列錯題
+    currentSentenceQuestions = shuffleWords(
+        reviewQuestions
+    );
+
+    // 重設遊戲狀態
+    currentSentenceQuestionIndex = 0;
+    sentenceScore = 0;
+    sentenceAnswered = false;
+    sentenceReviewMode = true;
+
+    // 建立遊戲容器
+    const quizArea = document.createElement("div");
+
+    quizArea.id = "quizArea";
+    quizArea.className = "quiz-area";
+
+    gamePanel.appendChild(quizArea);
+
+    // 沒有錯題時顯示完成畫面
+    if (currentSentenceQuestions.length === 0) {
+
+        showSentenceReviewResult();
+
+        return;
+
+    }
+
+    // 顯示第一題
+    showSentenceQuestion();
+
 }
 
 // ========================================
@@ -1525,6 +1776,1213 @@ function renderVocabularyWords() {
     `).join("");
 }
 
+// ==========================================
+// 開始英文問答練習
+// ==========================================
+
+function startSentenceGame() {
+
+    clearQuizArea();
+
+    // 檢查問答題庫
+    if (
+        typeof sentenceQuestions === "undefined" ||
+        sentenceQuestions.length < 4
+    ) {
+        panelDescription.textContent =
+            "找不到英文問答題庫，請確認 sentences.js 是否正確載入。";
+        return;
+    }
+
+    // 隨機抽取 10 題
+    currentSentenceQuestions = shuffleWords(
+        [...sentenceQuestions]
+    ).slice(
+        0,
+        Math.min(QUESTIONS_PER_ROUND, sentenceQuestions.length)
+    );
+
+    // 重設遊戲狀態
+    currentSentenceQuestionIndex = 0;
+    sentenceScore = 0;
+    sentenceAnswered = false;
+    sentenceReviewMode = false;
+
+    // 建立遊戲容器
+    const quizArea = document.createElement("div");
+
+    quizArea.id = "quizArea";
+    quizArea.className = "quiz-area";
+
+    gamePanel.appendChild(quizArea);
+
+    // 顯示第一題
+    showSentenceQuestion();
+}
+
+// ==========================================
+// 顯示英文問答題目
+// ==========================================
+
+function showSentenceQuestion() {
+
+    const quizArea = document.getElementById("quizArea");
+
+    if (!quizArea) return;
+
+    sentenceAnswered = false;
+
+    const currentQuestion =
+        currentSentenceQuestions[currentSentenceQuestionIndex];
+
+    // 建立四個答案選項
+    const wrongAnswers = shuffleWords(
+        sentenceQuestions.filter(
+            item => item.id !== currentQuestion.id
+        )
+    ).slice(0, 3);
+
+    const options = shuffleWords([
+        currentQuestion,
+        ...wrongAnswers
+    ]);
+
+    // 顯示題目
+    quizArea.innerHTML = `
+        <div class="quiz-info">
+            <span>⭐ 本輪得分：${score}</span>
+            <span>題目：${currentSentenceQuestionIndex + 1} / ${currentSentenceQuestions.length}</span>
+        </div>
+
+        <div class="quiz-progress">
+            <div class="quiz-progress-fill"
+                 style="width: ${(currentSentenceQuestionIndex / currentSentenceQuestions.length) * 100}%">
+            </div>
+        </div>
+        <div class="sentence-question-area">
+
+            <div class="sentence-question-card">
+
+                <!--<div class="sentence-question-text">-->
+                <h2>
+                    ${currentQuestion.question}
+                </h2>
+                <!--</div>-->
+
+                <!--<div class="sentence-question-meaning">-->
+                <h3>
+                    ${currentQuestion.questionMeaning}
+                </h3>
+                <!--</div>-->
+
+                <button
+                    class="speech-button"
+                    id="speakSentenceQuestionBtn">
+                    🔊 聽英文問題
+                </button>
+
+            </div>
+
+            <h3 class="sentence-answer-title">
+                請選出正確的回答：
+            </h3>
+
+            <div class="sentence-options">
+
+                ${options.map(option => `
+                    <button
+                        class="sentence-option-button"
+                        data-sentence-id="${option.id}">
+
+                        ${option.answer}` +
+
+                        // <span class="sentence-option-meaning">
+                        //     ${option.answerMeaning}
+                        // </span>
+
+                    `</button>
+                `).join("")}
+
+            </div>
+
+            <div id="sentenceFeedback"
+                class="answer-feedback">
+            </div>
+
+            <button
+                id="nextSentenceQuestionBtn"
+                class="next-button hidden">
+                下一題 ➜
+            </button>
+
+        </div>
+
+    `;
+
+    // 播放英文問題
+    document.getElementById(
+        "speakSentenceQuestionBtn"
+    ).addEventListener("click", () => {
+
+        speakEnglish(currentQuestion.question);
+
+    });
+
+    // 答案選項事件
+    const optionButtons = quizArea.querySelectorAll(
+        ".sentence-option-button"
+    );
+
+    optionButtons.forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            checkSentenceAnswer(
+                button.dataset.sentenceId,
+                currentQuestion,
+                optionButtons
+            );
+
+        });
+
+    });
+
+    // 下一題事件
+    document.getElementById(
+        "nextSentenceQuestionBtn"
+    ).addEventListener("click", () => {
+
+        currentSentenceQuestionIndex++;
+
+        if (
+            currentSentenceQuestionIndex <
+            currentSentenceQuestions.length
+        ) {
+
+            showSentenceQuestion();
+
+        } else {
+
+            if (sentenceReviewMode) {
+
+                if (allReviewMode) {
+                    allReviewResults.sentence = sentenceScore;
+                    startNextAllReview();
+                } else {
+                    showSentenceReviewResult();
+                }
+
+            } else {
+                showSentenceFinalResult();
+            }
+
+        }
+
+    });
+
+}
+
+// ==========================================
+// 檢查英文問答答案
+// ==========================================
+
+function checkSentenceAnswer(
+    selectedId,
+    correctQuestion,
+    optionButtons
+) {
+
+    if (sentenceAnswered) return;
+
+    sentenceAnswered = true;
+
+    const feedback = document.getElementById(
+        "sentenceFeedback"
+    );
+
+    const nextButton = document.getElementById(
+        "nextSentenceQuestionBtn"
+    );
+
+    const isCorrect = selectedId === correctQuestion.id;
+
+    // 鎖定所有答案按鈕
+    optionButtons.forEach(button => {
+
+        button.disabled = true;
+
+        if (button.dataset.sentenceId === correctQuestion.id) {
+
+            button.classList.add("correct");
+
+        } else if (button.dataset.sentenceId === selectedId) {
+
+            button.classList.add("incorrect");
+
+        }
+
+    });
+
+    if (isCorrect) {
+
+        // 答對音效
+        playCorrectSound();
+
+        sentenceScore++;
+
+        // 增加星星
+        totalStars++;
+
+        localStorage.setItem(
+            "kidsAdventureStars",
+            totalStars
+        );
+
+        // 如果之前答錯過，答對後移除錯題
+        wrongSentenceIds = wrongSentenceIds.filter(
+            id => id !== correctQuestion.id
+        );
+
+        localStorage.setItem(
+            "kidsAdventureWrongSentences",
+            JSON.stringify(wrongSentenceIds)
+        );
+
+        feedback.innerHTML = `
+
+            <div class="feedback-correct">
+
+                🎉 太棒了！答對了！
+
+                <br><br>
+
+                <strong>${correctQuestion.answer}</strong>
+
+                <br>
+
+                ${correctQuestion.answerMeaning}
+
+                <br><br>
+
+                ⭐ 獲得 1 顆星星！
+
+                <br><br>
+
+                <button
+                    class="speech-button"
+                    id="speakSentenceAnswerBtn">
+                    🔊 聽正確答案
+                </button>
+
+            </div>
+
+        `;
+
+    } else {
+
+        // 答錯音效
+        playWrongSound();
+
+        // 加入錯題紀錄
+        if (!wrongSentenceIds.includes(correctQuestion.id)) {
+
+            wrongSentenceIds.push(correctQuestion.id);
+
+        }
+
+        localStorage.setItem(
+            "kidsAdventureWrongSentences",
+            JSON.stringify(wrongSentenceIds)
+        );
+
+        feedback.innerHTML = `
+
+            <div class="feedback-incorrect">
+
+                💪 再接再厲！
+
+                <br><br>
+
+                正確答案是：
+
+                <br>
+
+                <strong>${correctQuestion.answer}</strong>
+
+                <br>
+
+                中文意思：${correctQuestion.answerMeaning}
+
+                <br><br>
+
+                <button
+                    class="speech-button"
+                    id="speakSentenceAnswerBtn">
+                    🔊 聽正確答案
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+    // 更新星星與進度
+    updateStarDisplay();
+    updateProgressDisplay();
+
+    // 正確答案語音
+    document.getElementById(
+        "speakSentenceAnswerBtn"
+    ).addEventListener("click", () => {
+
+        speakEnglish(correctQuestion.answer);
+
+    });
+
+    // 顯示下一題按鈕
+    nextButton.classList.remove("hidden");
+
+    nextButton.textContent =
+
+        currentSentenceQuestionIndex ===
+        currentSentenceQuestions.length - 1
+
+            ? "查看本輪成績 🏆"
+
+            : "下一題 ➜";
+
+}
+
+// ==========================================
+// 顯示英文問答最終成績
+// ==========================================
+
+function showSentenceFinalResult() {
+
+    // 播放過關音效
+    playLevelCompleteSound();
+
+    const quizArea = document.getElementById("quizArea");
+
+    if (!quizArea) return;
+
+    const total = currentSentenceQuestions.length;
+
+    const percentage = Math.round(
+        (sentenceScore / total) * 100
+    );
+
+    quizArea.innerHTML = `
+
+        <div class="final-result">
+
+            <div class="result-trophy">🏆</div>
+
+            <h2>英文問答挑戰完成！</h2>
+
+            <p class="result-score">
+                ${sentenceScore} / ${total}
+            </p>
+
+            <p>答對率：${percentage}%</p>
+
+            <p class="result-message">
+
+                ${
+                    percentage === 100
+                        ? "太厲害了！你是英文問答小達人！🌟"
+                        : percentage >= 70
+                            ? "表現很好！繼續加油！🎉"
+                            : "別灰心，多練習就會越來越棒！💪"
+                }
+
+            </p>
+
+            <p>⭐ 累積星星：${totalStars}</p>
+
+            <p>
+                📚 待複習問答：
+                ${wrongSentenceIds.length} 題
+            </p>
+
+            <button
+                id="playSentenceAgainBtn"
+                class="next-button">
+
+                🔄 再玩一次
+
+            </button>
+
+        </div>
+
+    `;
+
+    // 更新進度
+    updateProgressDisplay();
+
+    // 重新開始
+    document.getElementById(
+        "playSentenceAgainBtn"
+    ).addEventListener("click", () => {
+
+        startSentenceGame();
+
+    });
+
+}
+
+// ==========================================
+// 英文問答錯題複習完成畫面
+// ==========================================
+
+function showSentenceReviewResult() {
+
+    const quizArea = document.getElementById("quizArea");
+
+    if (!quizArea) return;
+
+    const total = currentSentenceQuestions.length;
+
+    const percentage = total > 0
+        ? Math.round((sentenceScore / total) * 100)
+        : 0;
+
+    quizArea.innerHTML = `
+
+        <div class="final-result">
+
+            <div class="result-trophy">💬</div>
+
+            <h2>英文問答複習完成！</h2>
+
+            <p class="result-score">
+                ${sentenceScore} / ${total}
+            </p>
+
+            <p>答對率：${percentage}%</p>
+
+            <p class="result-message">
+
+                ${
+                    total === 0
+                        ? "目前沒有需要複習的英文問答！🌟"
+                        : percentage === 100
+                            ? "太厲害了！全部答對了！🎉"
+                            : "繼續練習，你會越來越進步！💪"
+                }
+
+            </p>
+
+            <p>
+                📚 剩餘問答錯題：
+                ${wrongSentenceIds.length} 題
+            </p>
+
+            <button
+                id="backSentenceReviewBtn"
+                class="next-button">
+
+                🔄 再次複習
+
+            </button>
+
+        </div>
+
+    `;
+
+    updateProgressDisplay();
+
+    document.getElementById(
+        "backSentenceReviewBtn"
+    ).addEventListener("click", () => {
+
+        startSentenceReview();
+
+    });
+
+}
+
+// ==========================================
+// 開始英文文法挑戰
+// ==========================================
+
+function startGrammarGame() {
+
+    clearQuizArea();
+
+    // 檢查文法題庫
+    if (
+        typeof grammarQuestions === "undefined" ||
+        grammarQuestions.length < 4
+    ) {
+        panelDescription.textContent =
+            "找不到英文文法題庫，請確認 grammar.js 是否正確載入。";
+        return;
+    }
+
+    // 隨機抽取 10 題
+    currentGrammarQuestions = shuffleWords(
+        [...grammarQuestions]
+    ).slice(
+        0,
+        Math.min(QUESTIONS_PER_ROUND, grammarQuestions.length)
+    );
+
+    // 重設遊戲狀態
+    currentGrammarQuestionIndex = 0;
+    grammarScore = 0;
+    grammarAnswered = false;
+
+    grammarReviewMode = false;
+
+    // 建立遊戲容器
+    const quizArea = document.createElement("div");
+
+    quizArea.id = "quizArea";
+    quizArea.className = "quiz-area";
+
+    gamePanel.appendChild(quizArea);
+
+    // 顯示第一題
+    showGrammarQuestion();
+}
+
+function startGrammarReview() {
+    clearQuizArea();
+
+    const reviewQuestions = wrongGrammarIds
+        .map(id => grammarQuestions.find(item => item.id === id))
+        .filter(item => item !== undefined);
+
+    currentGrammarQuestions = shuffleWords(reviewQuestions);
+
+    currentGrammarQuestionIndex = 0;
+    grammarScore = 0;
+    grammarAnswered = false;
+    grammarReviewMode = true;
+
+    const quizArea = document.createElement("div");
+    quizArea.id = "quizArea";
+    quizArea.className = "quiz-area";
+    gamePanel.appendChild(quizArea);
+
+    if (currentGrammarQuestions.length === 0) {
+        showGrammarReviewResult();
+        return;
+    }
+
+    showGrammarQuestion();
+}
+
+// ==========================================
+// 顯示英文文法題目
+// ==========================================
+
+function showGrammarQuestion() {
+
+    const quizArea = document.getElementById("quizArea");
+
+    if (!quizArea) return;
+
+    grammarAnswered = false;
+
+    const currentQuestion =
+        currentGrammarQuestions[currentGrammarQuestionIndex];
+
+    // 隨機排列四個選項
+    const options = shuffleWords([
+        ...currentQuestion.options
+    ]);
+
+    // 顯示題目
+    quizArea.innerHTML = `
+        <div class="quiz-info">
+            <span>⭐ 本輪得分：${score}</span>
+            <span>題目：${currentGrammarQuestionIndex + 1} / ${currentGrammarQuestions.length}</span>
+        </div>
+
+        <div class="quiz-progress">
+            <div class="quiz-progress-fill"
+                 style="width: ${(currentGrammarQuestionIndex / currentGrammarQuestions.length) * 100}%">
+            </div>
+        </div>
+
+        <div class="grammar-question-area">
+
+            <div class="grammar-question-card">
+
+                <div class="grammar-category">
+                    📚 ${currentQuestion.category}
+                </div>
+
+                <!--<div class="grammar-question-text">-->
+                <h2>
+                    ${currentQuestion.question}
+                </h2>
+                <!--</div>-->
+
+                <!--<div class="grammar-question-meaning">-->
+                <h3>
+                    ${currentQuestion.questionMeaning}
+                </h3>
+                <!--</div>-->
+
+                <button
+                    class="speech-button"
+                    id="speakGrammarQuestionBtn">
+                    🔊 聽英文句子
+                </button>
+
+            </div>
+
+            <h3 class="grammar-answer-title">
+                請選出正確答案：
+            </h3>
+
+            <div class="grammar-options">
+
+                ${options.map((option, index) => `
+                    <button
+                        class="grammar-option-button"
+                        data-option="${option}">
+
+                        <span class="option-letter">
+                            ${String.fromCharCode(65 + index)}.
+                        </span>
+
+                        ${option}
+
+                    </button>
+                `).join("")}
+
+            </div>
+
+            <div id="grammarFeedback"
+                class="answer-feedback">
+            </div>
+
+            <button
+                id="nextGrammarQuestionBtn"
+                class="next-button hidden">
+                下一題 ➜
+            </button>
+
+        </div>
+
+    `;
+
+    // 播放英文句子
+    document.getElementById(
+        "speakGrammarQuestionBtn"
+    ).addEventListener("click", () => {
+
+        // 將填空位置替換成正確答案後朗讀
+        const completeSentence =
+            currentQuestion.question.replace(
+                "_____",
+                currentQuestion.answer
+            );
+
+        speakEnglish(completeSentence);
+
+    });
+
+    // 答案選項事件
+    const optionButtons = quizArea.querySelectorAll(
+        ".grammar-option-button"
+    );
+
+    optionButtons.forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            checkGrammarAnswer(
+                button.dataset.option,
+                currentQuestion,
+                optionButtons
+            );
+
+        });
+
+    });
+
+    // 下一題事件
+    document.getElementById(
+        "nextGrammarQuestionBtn"
+    ).addEventListener("click", () => {
+
+        currentGrammarQuestionIndex++;
+
+        if (
+            currentGrammarQuestionIndex <
+            currentGrammarQuestions.length
+        ) {
+
+            showGrammarQuestion();
+
+        } else {
+
+            if (grammarReviewMode) {
+
+                if (allReviewMode) {
+                    allReviewResults.grammar = grammarScore;
+                    startNextAllReview();
+                } else {
+                    showGrammarReviewResult();
+                }
+
+            } else {
+                showGrammarFinalResult();
+            }
+
+        }
+
+    });
+
+}
+
+// ==========================================
+// 檢查英文文法答案
+// ==========================================
+
+function checkGrammarAnswer(
+    selectedAnswer,
+    correctQuestion,
+    optionButtons
+) {
+
+    if (grammarAnswered) return;
+
+    grammarAnswered = true;
+
+    const feedback = document.getElementById(
+        "grammarFeedback"
+    );
+
+    const nextButton = document.getElementById(
+        "nextGrammarQuestionBtn"
+    );
+
+    const isCorrect =
+        selectedAnswer === correctQuestion.answer;
+
+    // 鎖定所有答案按鈕
+    optionButtons.forEach(button => {
+
+        button.disabled = true;
+
+        if (
+            button.dataset.option === correctQuestion.answer
+        ) {
+
+            button.classList.add("correct");
+
+        } else if (
+            button.dataset.option === selectedAnswer
+        ) {
+
+            button.classList.add("incorrect");
+
+        }
+
+    });
+
+    // 將正確答案填入完整句子
+    const completeSentence =
+        correctQuestion.question.replace(
+            "_____",
+            correctQuestion.answer
+        );
+
+    if (isCorrect) {
+
+        // 答對音效
+        playCorrectSound();
+
+        grammarScore++;
+
+        // 增加星星
+        totalStars++;
+
+        localStorage.setItem(
+            "kidsAdventureStars",
+            totalStars
+        );
+
+        // 如果之前答錯過，答對後移除錯題
+        wrongGrammarIds = wrongGrammarIds.filter(
+            id => id !== correctQuestion.id
+        );
+
+        localStorage.setItem(
+            "kidsAdventureWrongGrammar",
+            JSON.stringify(wrongGrammarIds)
+        );
+
+        feedback.innerHTML = `
+
+            <div class="feedback-correct">
+
+                🎉 太棒了！答對了！
+
+                <br><br>
+
+                <strong>${completeSentence}</strong>
+
+                <br><br>
+
+                📖 ${correctQuestion.explanation}
+
+                <br><br>
+
+                ⭐ 獲得 1 顆星星！
+
+                <br><br>
+
+                <button
+                    class="speech-button"
+                    id="speakGrammarAnswerBtn">
+                    🔊 聽正確句子
+                </button>
+
+            </div>
+
+        `;
+
+    } else {
+
+        // 答錯音效
+        playWrongSound();
+
+        // 加入錯題紀錄
+        if (!wrongGrammarIds.includes(correctQuestion.id)) {
+
+            wrongGrammarIds.push(correctQuestion.id);
+
+        }
+
+        localStorage.setItem(
+            "kidsAdventureWrongGrammar",
+            JSON.stringify(wrongGrammarIds)
+        );
+
+        feedback.innerHTML = `
+
+            <div class="feedback-incorrect">
+
+                💪 再接再厲！
+
+                <br><br>
+
+                正確答案是：
+
+                <br>
+
+                <strong>${correctQuestion.answer}</strong>
+
+                <br><br>
+
+                完整句子：
+
+                <br>
+
+                <strong>${completeSentence}</strong>
+
+                <br><br>
+
+                📖 ${correctQuestion.explanation}
+
+                <br><br>
+
+                <button
+                    class="speech-button"
+                    id="speakGrammarAnswerBtn">
+                    🔊 聽正確句子
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+    // 更新星星與進度
+    updateStarDisplay();
+    updateProgressDisplay();
+
+    // 播放完整正確句子
+    document.getElementById(
+        "speakGrammarAnswerBtn"
+    ).addEventListener("click", () => {
+
+        speakEnglish(completeSentence);
+
+    });
+
+    // 顯示下一題按鈕
+    nextButton.classList.remove("hidden");
+
+    nextButton.textContent =
+
+        currentGrammarQuestionIndex ===
+        currentGrammarQuestions.length - 1
+
+            ? "查看本輪成績 🏆"
+
+            : "下一題 ➜";
+
+}
+
+// ==========================================
+// 顯示英文文法最終成績
+// ==========================================
+
+function showGrammarFinalResult() {
+
+    // 播放過關音效
+    playLevelCompleteSound();
+
+    const quizArea = document.getElementById("quizArea");
+
+    if (!quizArea) return;
+
+    const total = currentGrammarQuestions.length;
+
+    const percentage = Math.round(
+        (grammarScore / total) * 100
+    );
+
+    quizArea.innerHTML = `
+
+        <div class="final-result">
+
+            <div class="result-trophy">🏆</div>
+
+            <h2>英文文法挑戰完成！</h2>
+
+            <p class="result-score">
+                ${grammarScore} / ${total}
+            </p>
+
+            <p>答對率：${percentage}%</p>
+
+            <p class="result-message">
+
+                ${
+                    percentage === 100
+                        ? "太厲害了！你是英文文法小達人！🌟"
+                        : percentage >= 70
+                            ? "表現很好！繼續加油！🎉"
+                            : "別灰心，多練習就會越來越棒！💪"
+                }
+
+            </p>
+
+            <p>⭐ 累積星星：${totalStars}</p>
+
+            <p>
+                📚 待複習文法：
+                ${wrongGrammarIds.length} 題
+            </p>
+
+            <button
+                id="playGrammarAgainBtn"
+                class="next-button">
+
+                🔄 再玩一次
+
+            </button>
+
+        </div>
+
+    `;
+
+    // 更新進度
+    updateProgressDisplay();
+
+    // 重新開始
+    document.getElementById(
+        "playGrammarAgainBtn"
+    ).addEventListener("click", () => {
+
+        startGrammarGame();
+
+    });
+
+}
+
+function showGrammarReviewResult() {
+    const quizArea = document.getElementById("quizArea");
+
+    const total = currentGrammarQuestions.length;
+    const percentage = total > 0
+        ? Math.round((grammarScore / total) * 100)
+        : 0;
+
+    quizArea.innerHTML = `
+        <div class="result-card">
+            <h2>📝 文法錯題複習完成！</h2>
+            <p>本次複習：${total} 題</p>
+            <p>答對題數：${grammarScore} 題</p>
+            <p>正確率：${percentage}%</p>
+            <p>尚未答對的錯題：${wrongGrammarIds.length} 題</p>
+
+            ${
+                total === 0
+                    ? "<h3>目前沒有需要複習的英文文法！🌟</h3>"
+                    : percentage === 100
+                        ? "<h3>太棒了！全部答對！🎉</h3>"
+                        : "<h3>繼續努力，你會越來越棒！💪</h3>"
+            }
+
+            <button id="replayGrammarReviewBtn" class="next-button">
+                🔄 再次複習
+            </button>
+        </div>
+    `;
+
+    document.getElementById("replayGrammarReviewBtn")
+        .addEventListener("click", startGrammarReview);
+
+    updateProgressDisplay();
+}
+
+function startAllReview() {
+    allReviewMode = true;
+
+    allReviewStage = "";
+
+    allReviewResults = {
+        word: 0,
+        sentence: 0,
+        grammar: 0
+    };
+
+    // 記錄本輪開始時各類型的錯題數量
+    allReviewTotals = {
+        word: wrongWordIds.length,
+        sentence: wrongSentenceIds.length,
+        grammar: wrongGrammarIds.length
+    };
+
+    startNextAllReview();
+}
+
+function startNextAllReview() {
+
+    // 單字錯題
+    if (allReviewStage === "") {
+        allReviewStage = "word";
+
+        if (wrongWordIds.length > 0) {
+            startWordReview();
+            return;
+        }
+    }
+
+    // 英文問答錯題
+    if (allReviewStage === "word") {
+        allReviewStage = "sentence";
+
+        if (wrongSentenceIds.length > 0) {
+            startSentenceReview();
+            return;
+        }
+    }
+
+    // 英文文法錯題
+    if (allReviewStage === "sentence") {
+        allReviewStage = "grammar";
+
+        if (wrongGrammarIds.length > 0) {
+            startGrammarReview();
+            return;
+        }
+    }
+
+    // 三種類型都完成
+    allReviewMode = false;
+
+    showAllReviewResult();
+}
+
+function showAllReviewResult() {
+
+    const quizArea = document.getElementById("quizArea");
+
+    const totalCorrect =
+        allReviewResults.word +
+        allReviewResults.sentence +
+        allReviewResults.grammar;
+
+    const remainingTotal =
+        wrongWordIds.length +
+        wrongSentenceIds.length +
+        wrongGrammarIds.length;
+
+    const totalQuestions =
+        allReviewTotals.word +
+        allReviewTotals.sentence +
+        allReviewTotals.grammar;
+
+    const percentage = totalQuestions > 0
+        ? Math.round((totalCorrect / totalQuestions) * 100)
+        : 0;
+
+    quizArea.innerHTML = `
+        <div class="final-result">
+
+            <div class="result-trophy">🏆</div>
+
+            <h2>全部錯題複習完成！</h2>
+
+            <p class="result-score">
+                本次答對：${totalCorrect} / ${totalQuestions} 題
+            </p>
+
+            <p>正確率：${percentage}%</p>
+
+            <hr>
+
+            <h3>📚 各類複習成果</h3>
+
+            <p>🖼️ 單字答對：${allReviewResults.word} 題</p>
+
+            <p>💬 英文問答答對：${allReviewResults.sentence} 題</p>
+
+            <p>📝 英文文法答對：${allReviewResults.grammar} 題</p>
+
+            <hr>
+
+            <p>📌 剩餘單字錯題：${wrongWordIds.length} 題</p>
+
+            <p>📌 剩餘英文問答錯題：${wrongSentenceIds.length} 題</p>
+
+            <p>📌 剩餘英文文法錯題：${wrongGrammarIds.length} 題</p>
+
+            <p>⭐ 累積星星：${totalStars}</p>
+
+            <p class="result-message">
+                ${
+                    remainingTotal === 0
+                        ? "太棒了！所有錯題都已經學會了！🌟"
+                        : "繼續努力，你一定會越來越進步！💪"
+                }
+            </p>
+
+            <button id="allReviewAgainBtn" class="next-button">
+                🔄 再次複習全部錯題
+            </button>
+
+        </div>
+    `;
+
+    updateProgressDisplay();
+
+    document.getElementById("allReviewAgainBtn")
+        .addEventListener("click", startAllReview);
+}
 
 // ========================================
 // 🎵 Kids English Adventure 音效系統
